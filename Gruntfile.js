@@ -17,6 +17,10 @@ module.exports = function(grunt) {
 "mfpversion: <%= pkg.version %> \r\n"+
 "pygments: true \r\n";
 
+
+  const sass = require('node-sass');
+  require('load-grunt-tasks')(grunt);
+
   // Project configuration.
   grunt.initConfig({
     // Metadata.
@@ -37,6 +41,10 @@ module.exports = function(grunt) {
         files: {      
           'dist/magnific-popup.css': 'src/css/main.scss'
         }
+      },
+      options: {
+	  implementation: sass,
+	  sourceMap: true,
       }
     },
 
