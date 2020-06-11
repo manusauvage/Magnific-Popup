@@ -13,9 +13,8 @@ module.exports = function(grunt) {
   var jekyllConfig = "isLocal : false \r\n"+
 "permalink: /:title/ \r\n"+
 "exclude: ['.json', '.rvmrc', '.rbenv-version', 'README.md', 'Rakefile', 'changelog.md', 'compiler.jar', 'private', 'magnific-popup.sublime-project', 'magnific-popup.sublime-workspace', '.htaccess'] \r\n"+
-"auto: true \r\n"+
 "mfpversion: <%= pkg.version %> \r\n"+
-"pygments: true \r\n";
+"highlighter: true \r\n";
 
 
   const sass = require('node-sass');
