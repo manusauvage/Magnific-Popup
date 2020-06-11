@@ -1,6 +1,6 @@
-/*! Magnific Popup - v1.1.0 - 2016-02-20
+/*! Magnific Popup - v1.1.0 - 2020-06-11
 * http://dimsemenov.com/plugins/magnific-popup/
-* Copyright (c) 2016 Dmitry Semenov; */
+* Copyright (c) 2020 Dmitry Semenov; */
 ;(function (factory) { 
 if (typeof define === 'function' && define.amd) { 
  // AMD. Register as an anonymous module. 
@@ -83,7 +83,7 @@ var _mfpOn = function(name, f) {
 			// converts "mfpEventName" to "eventName" callback and triggers it if it's present
 			e = e.charAt(0).toLowerCase() + e.slice(1);
 			if(mfp.st.callbacks[e]) {
-				mfp.st.callbacks[e].apply(mfp, $.isArray(data) ? data : [data]);
+				mfp.st.callbacks[e].apply(mfp, Array.isArray(data) ? data : [data]);
 			}
 		}
 	},
@@ -175,7 +175,7 @@ MagnificPopup.prototype = {
 				}
 			}
 		} else {
-			mfp.items = $.isArray(data.items) ? data.items : [data.items];
+			mfp.items = Array.isArray(data.items) ? data.items : [data.items];
 			mfp.index = data.index || 0;
 		}
 
@@ -445,7 +445,7 @@ MagnificPopup.prototype = {
 
 
 		if(mfp.st.autoFocusLast && mfp._lastFocusedEl) {
-			$(mfp._lastFocusedEl).focus(); // put tab focus back
+			$(mfp._lastFocusedEl).trigger('focus'); // put tab focus back
 		}
 		mfp.currItem = null;	
 		mfp.content = null;
@@ -641,7 +641,7 @@ MagnificPopup.prototype = {
 		var disableOn = options.disableOn !== undefined ? options.disableOn : $.magnificPopup.defaults.disableOn;
 
 		if(disableOn) {
-			if($.isFunction(disableOn)) {
+			if(typeof disableOn === "function") {
 				if( !disableOn.call(mfp) ) {
 					return true;
 				}
@@ -712,7 +712,7 @@ MagnificPopup.prototype = {
 	// "target" is an element that was clicked
 	_checkIfClose: function(target) {
 
-		if($(target).hasClass(PREVENT_CLOSE_CLASS)) {
+		if($(target).closest('.' + PREVENT_CLOSE_CLASS).length) {
 			return;
 		}
 
@@ -724,7 +724,7 @@ MagnificPopup.prototype = {
 		} else {
 
 			// We close the popup if click is on close button or on preloader. Or if there is no content.
-			if(!mfp.content || $(target).hasClass('mfp-close') || (mfp.preloader && target === mfp.preloader[0]) ) {
+			if(!mfp.content || $(target).closest('.mfp-close').length || (mfp.preloader && target === mfp.preloader[0]) ) {
 				return true;
 			}
 
@@ -755,7 +755,7 @@ MagnificPopup.prototype = {
 		return (  (mfp.isIE7 ? _document.height() : document.body.scrollHeight) > (winHeight || _window.height()) );
 	},
 	_setFocus: function() {
-		(mfp.st.focus ? mfp.content.find(mfp.st.focus).eq(0) : mfp.wrap).focus();
+		(mfp.st.focus ? mfp.content.find(mfp.st.focus).eq(0) : mfp.wrap).trigger('focus');
 	},
 	_onFocusIn: function(e) {
 		if( e.target !== mfp.wrap[0] && !$.contains(mfp.wrap[0], e.target) ) {
@@ -955,6 +955,7 @@ $.fn.magnificPopup = function(options) {
 	return jqEl;
 };
 
+
 /*>>core*/
 
 /*>>inline*/
@@ -1117,7 +1118,7 @@ var _imgInterval,
 		var src = mfp.st.image.titleSrc;
 
 		if(src) {
-			if($.isFunction(src)) {
+			if(typeof src === "function") {
 				return src.call(mfp, item);
 			} else if(item.el) {
 				return item.el.attr(src) || '';
@@ -1354,6 +1355,7 @@ $.magnificPopup.registerModule('image', {
 	}
 });
 
+
 /*>>image*/
 
 /*>>zoom*/
@@ -1393,9 +1395,9 @@ $.magnificPopup.registerModule('zoom', {
 						transition = 'all '+(zoomSt.duration/1000)+'s ' + zoomSt.easing,
 						cssObj = {
 							position: 'fixed',
-							zIndex: 9999,
-							left: 0,
-							top: 0,
+							zIndex: '9999',
+							left: '0',
+							top: '0',
 							'-webkit-backface-visibility': 'hidden'
 						},
 						t = 'transition';
@@ -1731,10 +1733,10 @@ $.magnificPopup.registerModule('gallery', {
 						arrowLeft = mfp.arrowLeft = $( markup.replace(/%title%/gi, gSt.tPrev).replace(/%dir%/gi, 'left') ).addClass(PREVENT_CLOSE_CLASS),
 						arrowRight = mfp.arrowRight = $( markup.replace(/%title%/gi, gSt.tNext).replace(/%dir%/gi, 'right') ).addClass(PREVENT_CLOSE_CLASS);
 
-					arrowLeft.click(function() {
+					arrowLeft.on('click', function() {
 						mfp.prev();
 					});
-					arrowRight.click(function() {
+					arrowRight.on('click', function() {
 						mfp.next();
 					});
 
@@ -1816,6 +1818,7 @@ $.magnificPopup.registerModule('gallery', {
 		}
 	}
 });
+
 
 /*>>gallery*/
 
